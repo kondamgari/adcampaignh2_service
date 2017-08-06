@@ -1,0 +1,34 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.6.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+group 'com.comcast.xh'
+version '1.0.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-devtools:$springBootVersion"
+    runtime "com.h2database:h2"
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile("org.powermock:powermock-core:1.6.5")
+    testCompile("org.powermock:powermock-api-mockito:1.6.5")
+    testCompile("org.powermock:powermock-module-junit4:1.6.5")
+}
