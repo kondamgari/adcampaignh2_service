@@ -8,9 +8,10 @@ import com.comcast.xh.domain.Campaign;
  */
 public interface AdCampaignService {
 
-    public Campaign addCampaign(Campaign campaign);
+    public Campaign addCampaign(Campaign campaign)throws Exception;
     public boolean campaignExists(String partnerId);
-    public Campaign findOneCampaign(String partnerId);
+    public Campaign findOneCampaign(String partnerId) throws Exception;
     public  Iterable<Campaign> getAllCampaigns();
-
+    public Campaign updateCampaign(Campaign campaign) throws Exception;
+    public void deleteCampaign(String partnerId) throws Exception;
 }

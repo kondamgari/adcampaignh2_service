@@ -19,9 +19,6 @@ class AdCampaignController extends BaseAdCampaignController {
     @RequestMapping(value = "/addCampaign", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     public void addCampaign(@RequestBody Campaign campaign) throws Exception {
-        //Check if campaign exists for the same partner
-        if(campaignService.campaignExists(campaign.getPartner_id()))
-            throw new Exception("Already exists");
         campaignService.addCampaign(campaign);
     }
 
@@ -34,4 +31,17 @@ class AdCampaignController extends BaseAdCampaignController {
     public ResponseEntity<Iterable<Campaign>> getAllCampaigns() {
         return new ResponseEntity<Iterable<Campaign>>(campaignService.getAllCampaigns(),HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/updateCampaign", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.OK)
+    public void updateCampaign(@RequestBody Campaign campaign) throws Exception {
+        campaignService.updateCampaign(campaign);
+    }
+
+    @RequestMapping(value = "/deleteCampaign/{partner_id}", method = RequestMethod.DELETE)
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deleteCampaign(@PathVariable("partner_id") String partner_id) throws Exception {
+        campaignService.deleteCampaign(partner_id);
+    }
+
 }
