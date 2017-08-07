@@ -50,7 +50,7 @@ RESPONSE: HTTP 200 (Created)
 GET http://localhost:8090/campaign/getAllCampaigns
 
 Response: HTTP 200
-Content: List of all Campaigns
+Content: Array of all Campaigns
 ```
 
 ### Update a Campaign
