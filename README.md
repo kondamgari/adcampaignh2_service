@@ -99,3 +99,12 @@ GET http://localhost:8090/campaign/getCampaignsByAdTitle/{adtitle}
 Response: HTTP 200
 Content: Array of Campaigns in json format
 ```
+
+### Delete Camapign
+
+```
+DELETE http://localhost:8090/campaign/deleteCampaign/{partnerid}
+
+Response: HTTP 200
+
+```
