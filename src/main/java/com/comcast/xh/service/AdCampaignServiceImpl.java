@@ -2,6 +2,7 @@ package com.comcast.xh.service;
 
 import com.comcast.xh.domain.Campaign;
 import com.comcast.xh.repository.CampaignRepository;
+import com.comcast.xh.util.CampaignUtil;
 import com.comcast.xh.util.ErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by skonda004c on 8/5/2017.
@@ -20,16 +25,19 @@ public class AdCampaignServiceImpl implements AdCampaignService {
 
     private static final Logger log = LoggerFactory.getLogger(AdCampaignServiceImpl.class);
     @Autowired
-    CampaignRepository campaignRepository;
+    private CampaignRepository campaignRepository;
+    @Autowired
+    private CampaignUtil campaignUtil;
+
 
     public Campaign addCampaign(Campaign campaign) throws Exception {
-        //DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+
         //Check if any campaign exists with the partnerid, if yes throw the exception
         if(campaignRepository.exists((campaign.getPartnerid()))){
             throw new Exception(ErrorConstants.ONE_CAMPAIGN_PER_PARTNER);
         }else{ //Save the new Campaign details for the partner
-            campaign.setDateOfCreation(Calendar.getInstance().getTime());
+            Calendar cal = Calendar.getInstance();
+            campaign.setDateOfCreation(cal.getTime());
             return campaignRepository.save(campaign);
         }
 
@@ -49,6 +57,7 @@ public class AdCampaignServiceImpl implements AdCampaignService {
     public Campaign findOneCampaign(String partnerId) throws Exception{
         log.info("Start:AdCampaignServiceImpl.findOneCampaign>>>");
         Campaign campaign = null;
+        boolean active=false;
 
         if(!StringUtils.isEmpty(partnerId)){
             campaign =  campaignRepository.findOne(partnerId);
@@ -56,8 +65,20 @@ public class AdCampaignServiceImpl implements AdCampaignService {
         //Check whether its active or not.
         if(null!=campaign && !StringUtils.isEmpty(campaign.getAdstatus()) && "Active".equalsIgnoreCase(campaign.getAdstatus())) {
             log.info("Found an active campaign for {}",partnerId);
+            //Now check whether current time is greater than duration + created time
+            long duration = campaignUtil.duration(campaign.getDateOfCreation());
+            if(duration > campaign.getDuration()){
+                log.info("Campaign is expired....");
+            }else{
+                log.info("Campaign is Active....");
+                active = true;
+            }
+
+        }
+        if(active) {
             return campaign;
-        }else {
+        }else
+        {
             throw new Exception(ErrorConstants.NO_CAMPAIGN_FOR_PARTNER);
         }
     }

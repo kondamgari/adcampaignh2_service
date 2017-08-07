@@ -73,8 +73,9 @@ Content-Type: application/json
 RESPONSE: HTTP 200
 ```
 
-### Retrieve Camapign based on partnerid
+### Retrieve Camapaign based on partnerid
 
+Returns the campaign only if its active and created tim + duration < current time
 ```
 GET http://localhost:8090/campaign/getCampaign/{partnerid}
 
