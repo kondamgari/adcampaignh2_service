@@ -34,11 +34,11 @@ Content-Type: application/json
 
 {
 
-"partner_id": "Comcast",
+"partnerid": "Comcast",
 "duration":10,
-"ad_content":"XH Advertising",
-"ad_title":"XH Home Security",
-"ad_status":"Active"
+"adcontent":"XH Advertising",
+"adtitle":"XH Home Security",
+"adstatus":"Active"
 
 }
 
@@ -62,22 +62,39 @@ Content-Type: application/json
 
 {
 
-"partner_id": "Comcast",
+"partnerid": "Comcast",
 "duration":100,
-"ad_content":"XH Advertising",
-"ad_title":"XH Home Security",
-"ad_status":"Active"
+"adcontent":"XH Advertising",
+"adtitle":"XH Home Security",
+"adstatus":"Active"
 
 }
 
 RESPONSE: HTTP 200
 ```
 
-### Retrieve Camapign based on partner_id
+### Retrieve Camapign based on partnerid
 
 ```
-GET http://localhost:8090/campaign/getCampaign/{partner_id}
+GET http://localhost:8090/campaign/getCampaign/{partnerid}
 
 Response: HTTP 200
 Content: Campaign in json format
+```
+### Retrieve Camapign by adcontent
+
+```
+GET http://localhost:8090/campaign/getCampaignsByAdContent/{adcontent}
+
+Response: HTTP 200
+Content: Array of Campaigns in json format
+```
+
+### Retrieve Camapign by adtitle
+
+```
+GET http://localhost:8090/campaign/getCampaignsByAdTitle/{adtitle}
+
+Response: HTTP 200
+Content: Array of Campaigns in json format
 ```

@@ -9,6 +9,9 @@ import org.springframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 /**
  * Created by skonda004c on 8/5/2017.
  */
@@ -20,11 +23,13 @@ public class AdCampaignServiceImpl implements AdCampaignService {
     CampaignRepository campaignRepository;
 
     public Campaign addCampaign(Campaign campaign) throws Exception {
-
-        //Check if any campaign exists with the partner_id, if yes throw the exception
-        if(campaignRepository.exists((campaign.getPartner_id()))){
+        //DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+        //Check if any campaign exists with the partnerid, if yes throw the exception
+        if(campaignRepository.exists((campaign.getPartnerid()))){
             throw new Exception(ErrorConstants.ONE_CAMPAIGN_PER_PARTNER);
         }else{ //Save the new Campaign details for the partner
+            campaign.setDateOfCreation(Calendar.getInstance().getTime());
             return campaignRepository.save(campaign);
         }
 
@@ -49,7 +54,7 @@ public class AdCampaignServiceImpl implements AdCampaignService {
             campaign =  campaignRepository.findOne(partnerId);
         }
         //Check whether its active or not.
-        if(null!=campaign && !StringUtils.isEmpty(campaign.getAd_status()) && "Active".equalsIgnoreCase(campaign.getAd_status())) {
+        if(null!=campaign && !StringUtils.isEmpty(campaign.getAdstatus()) && "Active".equalsIgnoreCase(campaign.getAdstatus())) {
             log.info("Found an active campaign for {}",partnerId);
             return campaign;
         }else {
@@ -65,7 +70,7 @@ public class AdCampaignServiceImpl implements AdCampaignService {
     public Campaign updateCampaign(Campaign campaign) throws Exception {
 
         //Check if campaign exists for the partner to be updated
-        if(null!=campaign && !StringUtils.isEmpty(campaign.getPartner_id()) && campaignRepository.exists(campaign.getPartner_id()))
+        if(null!=campaign && !StringUtils.isEmpty(campaign.getPartnerid()) && campaignRepository.exists(campaign.getPartnerid()))
             return campaignRepository.save(campaign);
          else{ //No campaign found to update
             throw new Exception(ErrorConstants.NO_CAMPAIGN_FOUND);
@@ -81,5 +86,28 @@ public class AdCampaignServiceImpl implements AdCampaignService {
             throw new Exception(ErrorConstants.NO_CAMPAIGN_FOUND);
         }
     }
+
+    @Override
+    public Iterable<Campaign> findByAdcontent(String adcontent) throws Exception {
+        Iterable<Campaign> campaigns = campaignRepository.findByAdcontent(adcontent);
+        if(null!=campaigns){
+            return campaigns;
+        }else{
+            log.info("No Campaigns found for adconent: {}",adcontent);
+            throw new Exception(ErrorConstants.NO_CAMPAIGN_FOUND_FOR_ADCONTENT);
+        }
+    }
+
+    @Override
+    public Iterable<Campaign> findByAdtitle(String adtitle)throws Exception {
+        Iterable<Campaign> campaigns = campaignRepository.findByAdtitle(adtitle);
+        if(null!=campaigns){
+            return campaigns;
+        }else{
+            log.info("No Campaigns found for adtitle: {}",adtitle);
+            throw new Exception(ErrorConstants.NO_CAMPAIGN_FOUND_FOR_ADTITLE);
+        }
+    }
+
 
 }

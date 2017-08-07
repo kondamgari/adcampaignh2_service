@@ -10,5 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CampaignRepository extends CrudRepository<Campaign, String> {
+    public Iterable<Campaign> findByAdcontent(String adcontent);
+    public Iterable<Campaign> findByAdtitle(String adtitle);
 
 }
