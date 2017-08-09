@@ -130,5 +130,18 @@ public class AdCampaignServiceImpl implements AdCampaignService {
         }
     }
 
+    @Override
+    public Campaign findByAdtitleAndDuration(String adtitle, int duration) throws Exception {
+        Campaign campaign = null;
+        campaign = campaignRepository.findByAdtitleAndDuration(adtitle,duration);
+        if(null!=campaign)
+            return campaign;
+        else{
+            log.info("No Campaigns found for adtitle: {} and duration: {}",adtitle,duration);
+            throw new Exception(ErrorConstants.NO_CAMPAIGN_FOUND_FOR_ADTITLE_DURATION);
+        }
+    }
+
+
 
 }

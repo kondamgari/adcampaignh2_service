@@ -91,4 +91,16 @@ public class AdCampaignController extends BaseAdCampaignController {
         return new ResponseEntity<Iterable<Campaign>>(campaignService.findByAdtitle(adtitle),HttpStatus.OK);
     }
 
+    /***
+     * Retrieves Campaign by duration and adtitle
+     * @param duration
+     * @param adtitle
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/getCampaignsByAdTitleAndDuration/{duration}/{adtitle}", method = RequestMethod.GET)
+    public ResponseEntity<Campaign> getCampaignsByAdTitle(@PathVariable("duration") int duration, @PathVariable("adtitle") String adtitle)throws Exception {
+        return new ResponseEntity<Campaign>(campaignService.findByAdtitleAndDuration(adtitle,duration),HttpStatus.OK);
+    }
+
 }

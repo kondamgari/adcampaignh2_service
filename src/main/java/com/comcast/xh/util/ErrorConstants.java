@@ -9,4 +9,5 @@ public class ErrorConstants {
     public static final String NO_CAMPAIGN_FOUND = "Campaign not found to update";
     public static final String NO_CAMPAIGN_FOUND_FOR_ADCONTENT = "No Campaign exists for the provided adcontent";
     public static final String NO_CAMPAIGN_FOUND_FOR_ADTITLE = "No Campaign exists for the provided adtitle";
+    public static final String NO_CAMPAIGN_FOUND_FOR_ADTITLE_DURATION = "No Campaign found with provided adtitle and duration";
 }

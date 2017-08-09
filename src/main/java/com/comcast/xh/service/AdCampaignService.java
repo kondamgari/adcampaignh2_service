@@ -16,4 +16,5 @@ public interface AdCampaignService {
     public void deleteCampaign(String partnerId) throws Exception;
     public  Iterable<Campaign> findByAdcontent(String adcontent) throws Exception;
     public  Iterable<Campaign> findByAdtitle(String adtitle) throws Exception;
+    public Campaign findByAdtitleAndDuration(String adtitle, int duration) throws Exception;
 }

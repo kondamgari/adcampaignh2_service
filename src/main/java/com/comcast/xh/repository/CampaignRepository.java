@@ -12,5 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface CampaignRepository extends CrudRepository<Campaign, String> {
     public Iterable<Campaign> findByAdcontent(String adcontent);
     public Iterable<Campaign> findByAdtitle(String adtitle);
+    public Campaign findByAdtitleAndDuration(String adtitle, int duration);
 
 }
