@@ -108,3 +108,12 @@ DELETE http://localhost:8090/campaign/deleteCampaign/{partnerid}
 Response: HTTP 200
 
 ```
+
+### Retrieve Camapign by adtitle and duration
+
+```
+GET http://localhost:8090/campaign/getCampaignsByAdTitleAndDuration/{duration}/{adtitle}
+
+Response: HTTP 200
+Content: Campaign in json format
+```
