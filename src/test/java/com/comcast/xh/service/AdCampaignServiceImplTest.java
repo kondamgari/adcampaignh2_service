@@ -32,15 +32,15 @@ public class AdCampaignServiceImplTest {
     @Test
     public void testGetCampaign(){
 
-        String partnerId = "partnerid";
+        Long campaignid = new Long(10);
 
         Campaign campaignResponse = new Campaign();
-        campaignResponse.setPartnerid("partnerid");
+        campaignResponse.setPartnerid("campaignid");
         campaignResponse.setAdtitle("Test");
 
-        when(campaignRepository.findOne(partnerId)).thenReturn(campaignResponse);
+        when(campaignRepository.findOne(campaignid)).thenReturn(campaignResponse);
         try {
-            Campaign response = adCampaignService.findOneCampaign(partnerId);
+            Campaign response = adCampaignService.findOneCampaign(campaignid);
             assertEquals(campaignResponse.getPartnerid(),response.getPartnerid());
             assertEquals(campaignResponse.getAdtitle(),response.getAdtitle());
         } catch (Exception e) {

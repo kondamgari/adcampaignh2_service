@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface CampaignRepository extends CrudRepository<Campaign, String> {
+public interface CampaignRepository extends CrudRepository<Campaign, Long> {
     public Iterable<Campaign> findByAdcontent(String adcontent);
     public Iterable<Campaign> findByAdtitle(String adtitle);
-    public Campaign findByAdtitleAndDuration(String adtitle, int duration);
-
+    public Iterable<Campaign> findByAdtitleAndDuration(String adtitle, int duration);
+    public Iterable<Campaign> findByPartnerid(String partnerid);
 }

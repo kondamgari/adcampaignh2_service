@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * Created by skonda004c on 8/5/2017.
  */
-@RequestMapping("/campaign")
+@RequestMapping("/adcampaign")
 public abstract class BaseAdCampaignController {
     @Autowired
     AdCampaignService campaignService;

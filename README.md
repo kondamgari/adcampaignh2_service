@@ -28,7 +28,7 @@ Here are some endpoints you can call:
 ### Create a Campaign for a Partner
 
 ```
-POST http://localhost:8090/campaign/addCampaign
+POST http://localhost:8090/adcampaign/campaign
 Accept: application/json
 Content-Type: application/json
 
@@ -42,12 +42,12 @@ Content-Type: application/json
 
 }
 
-RESPONSE: HTTP 200 (Created)
+RESPONSE: HTTP 201 (Created)
 ```
 ### Retrieve all Campaigns
 
 ```
-GET http://localhost:8090/campaign/getAllCampaigns
+GET http://localhost:8090/adcampaign/campaign
 
 Response: HTTP 200
 Content: Array of all Campaigns
@@ -56,12 +56,12 @@ Content: Array of all Campaigns
 ### Update a Campaign
 
 ```
-PUT http://localhost:8090/campaign/updateCampaign
+PUT http://localhost:8090/adcampaign/campaign
 Accept: application/json
 Content-Type: application/json
 
 {
-
+"campaignid":10,
 "partnerid": "Comcast",
 "duration":100,
 "adcontent":"XH Advertising",
@@ -73,19 +73,28 @@ Content-Type: application/json
 RESPONSE: HTTP 200
 ```
 
-### Retrieve Camapaign based on partnerid
+### Retrieve Camapaign based on campaignid
 
 Returns the campaign only if its active and created tim + duration < current time
 ```
-GET http://localhost:8090/campaign/getCampaign/{partnerid}
+GET http://localhost:8090/adcampaign/campaign/{campaignid}
 
 Response: HTTP 200
 Content: Campaign in json format
 ```
+### Retrieve all active Camapaign's based on partnerid
+
+Returns the campaign only if its active and created tim + duration < current time
+```
+GET http://localhost:8090/adcampaign?partnerid={partnerid}
+
+Response: HTTP 200
+Content: Array of Campaign's in json format
+```
 ### Retrieve Camapign by adcontent
 
 ```
-GET http://localhost:8090/campaign/getCampaignsByAdContent/{adcontent}
+GET http://localhost:8090/adcampaign/campaign?adcontent={adcontent}
 
 Response: HTTP 200
 Content: Array of Campaigns in json format
@@ -94,7 +103,7 @@ Content: Array of Campaigns in json format
 ### Retrieve Camapign by adtitle
 
 ```
-GET http://localhost:8090/campaign/getCampaignsByAdTitle/{adtitle}
+GET http://localhost:8090/adcampaign/campaign?adtitle={adtitle}
 
 Response: HTTP 200
 Content: Array of Campaigns in json format
@@ -103,7 +112,7 @@ Content: Array of Campaigns in json format
 ### Delete Camapign
 
 ```
-DELETE http://localhost:8090/campaign/deleteCampaign/{partnerid}
+DELETE http://localhost:8090/adcampaign/campaign/{campaignid}
 
 Response: HTTP 200
 
@@ -112,7 +121,8 @@ Response: HTTP 200
 ### Retrieve Camapign by adtitle and duration
 
 ```
-GET http://localhost:8090/campaign/getCampaignsByAdTitleAndDuration/{duration}/{adtitle}
+GET http://localhost:8090/adcampaign/campaign?duration={duration}&adtitle={adtitle}
+Ex: http://localhost:8090/adcampaign/campaign?duration=400&adtitle=XH Home Security
 
 Response: HTTP 200
 Content: Campaign in json format

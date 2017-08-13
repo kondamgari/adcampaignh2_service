@@ -9,13 +9,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by skonda004c on 8/5/2017.
@@ -32,39 +28,32 @@ public class AdCampaignServiceImpl implements AdCampaignService {
 
     public Campaign addCampaign(Campaign campaign) throws Exception {
 
-        //Check if any campaign exists with the partnerid, if yes throw the exception
-        if(campaignRepository.exists((campaign.getPartnerid()))){
-            throw new Exception(ErrorConstants.ONE_CAMPAIGN_PER_PARTNER);
-        }else{ //Save the new Campaign details for the partner
             Calendar cal = Calendar.getInstance();
             campaign.setDateOfCreation(cal.getTime());
             return campaignRepository.save(campaign);
-        }
-
     }
 
-    public boolean campaignExists(String partnerId){
-        return campaignRepository.exists(partnerId);
+    public boolean campaignExists(Long campaignid){
+        return campaignRepository.exists(campaignid);
     }
 
     /***
      * Find a Campaign for the given the partnerId.
      * Returns the active campaign
-     * @param partnerId
+     * @param campaignid
      * @return
      * @throws Exception
      */
-    public Campaign findOneCampaign(String partnerId) throws Exception{
+    public Campaign findOneCampaign(Long campaignid) throws Exception{
         log.info("Start:AdCampaignServiceImpl.findOneCampaign>>>");
         Campaign campaign = null;
         boolean active=false;
 
-        if(!StringUtils.isEmpty(partnerId)){
-            campaign =  campaignRepository.findOne(partnerId);
-        }
+        campaign =  campaignRepository.findOne(campaignid);
+
         //Check whether its active or not.
         if(null!=campaign && !StringUtils.isEmpty(campaign.getAdstatus()) && "Active".equalsIgnoreCase(campaign.getAdstatus())) {
-            log.info("Found an active campaign for {}",partnerId);
+            log.info("Found an active campaign for {}",campaignid);
             //Now check whether current time is greater than duration + created time
             long duration = campaignUtil.duration(campaign.getDateOfCreation());
             if(duration > campaign.getDuration()){
@@ -90,22 +79,24 @@ public class AdCampaignServiceImpl implements AdCampaignService {
     @Override
     public Campaign updateCampaign(Campaign campaign) throws Exception {
 
-        //Check if campaign exists for the partner to be updated
-        if(null!=campaign && !StringUtils.isEmpty(campaign.getPartnerid()) && campaignRepository.exists(campaign.getPartnerid()))
+        //Check if campaign exists for the campaignid to be updated
+        if(null!=campaign && campaign.getCampaignid()!=null && campaignRepository.exists(campaign.getCampaignid()))
             return campaignRepository.save(campaign);
          else{ //No campaign found to update
             throw new Exception(ErrorConstants.NO_CAMPAIGN_FOUND);
         }
+
     }
 
     @Override
-    public void deleteCampaign(String partnerId) throws Exception {
+    public void deleteCampaign(Long campaignid) throws Exception {
         //Check if campaign exists with partnerId
-        if(!StringUtils.isEmpty(partnerId) && campaignRepository.exists(partnerId))
-            campaignRepository.delete(partnerId);
-        else{ //No campaign found to update
-            throw new Exception(ErrorConstants.NO_CAMPAIGN_FOUND);
+        if(campaignid!=null && campaignRepository.exists(campaignid))
+            campaignRepository.delete(campaignid);
+        else{ //No campaign found to delete
+            throw new Exception(ErrorConstants.NO_CAMPAIGN_FOUND_TO_DELETE);
         }
+
     }
 
     @Override
@@ -131,17 +122,52 @@ public class AdCampaignServiceImpl implements AdCampaignService {
     }
 
     @Override
-    public Campaign findByAdtitleAndDuration(String adtitle, int duration) throws Exception {
-        Campaign campaign = null;
-        campaign = campaignRepository.findByAdtitleAndDuration(adtitle,duration);
-        if(null!=campaign)
-            return campaign;
+    public List<Campaign> findByAdtitleAndDuration(String adtitle, int duration) throws Exception {
+        List<Campaign> list = new ArrayList<Campaign>();
+        Iterable<Campaign> campaigns = campaignRepository.findByAdtitleAndDuration(adtitle,duration);
+        for(Campaign c:campaigns){
+            list.add(c);
+        }
+        if(null!=list && !list.isEmpty())
+            return list;
         else{
             log.info("No Campaigns found for adtitle: {} and duration: {}",adtitle,duration);
             throw new Exception(ErrorConstants.NO_CAMPAIGN_FOUND_FOR_ADTITLE_DURATION);
         }
     }
 
+    /***
+     * Returns the active campaigns for the partner
+     * @param partnerid
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public List<Campaign> findByPartnerid(String partnerid) throws Exception {
+        List<Campaign> responseList = null;
+        Iterable<Campaign> campaigns = campaignRepository.findByPartnerid(partnerid);
+        if(null!=campaigns){
+            responseList = new ArrayList<Campaign>();
+            for(Campaign campaign:campaigns){
+                if(null!=campaign && !StringUtils.isEmpty(campaign.getAdstatus()) && "Active".equalsIgnoreCase(campaign.getAdstatus())) {
+                    log.info("Found an active campaign for {}",partnerid);
+                    //Now check whether current time is greater than duration + created time
+                    long duration = campaignUtil.duration(campaign.getDateOfCreation());
+                    if(duration > campaign.getDuration()){
+                        log.info("Campaign is expired....");
+                    }else{
+                        log.info("Campaign is Active....");
+                        responseList.add(campaign);     //Return only the active campaigns
+                    }
+                }
+            }
+        }
 
-
+        if(responseList!=null && !responseList.isEmpty()) {
+            return responseList;
+        }else {
+            log.info("No Campaigns found for partnerid: {}",partnerid);
+            throw new Exception(ErrorConstants.NO_CAMPAIGN_FOR_PARTNER);
+        }
+    }
 }
