@@ -20,7 +20,7 @@ This should run the application and once the application runs you should see som
 You can call some REST endpoints defined in ```com.comcast.xh.controller.AdCampaignController``` on **port 8090**.
 You can call some of the operational endpoints like
 ```
-http://localhost:8090/campaign/addCampaign
+http://localhost:8090/adcampaign/campaign
 ```
 
 Here are some endpoints you can call:
